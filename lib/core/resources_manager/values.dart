@@ -83,3 +83,42 @@ class AppSize {
   static const double appSize300 = 300;
   static const double appSize350 = 350;
 }
+
+class AppPadding {
+  AppPadding._();
+  static const double appPadding0 = 0;
+  static const double appPadding2 = 2;
+  static const double appPadding4 = 4;
+  static const double appPadding6 = 6;
+  static const double appPadding8 = 8;
+  static const double appPadding10 = 10;
+  static const double appPadding12 = 12;
+  static const double appPadding14 = 14;
+  static const double appPadding16 = 16;
+  static const double appPadding18 = 16;
+  static const double appPadding20 = 20;
+  static const double appPadding22 = 22;
+  static const double appPadding24 = 24;
+  static const double appPadding26 = 26;
+  static const double appPadding28 = 28;
+  static const double appPadding30 = 30;
+  static const double appPadding40 = 40;
+  static const double appPadding50 = 50;
+  static const double appPadding60 = 60;
+}
+
+class AppValue {
+  AppValue._();
+  static const int appValue60 = 60;
+  static const int appValue100 = 100;
+  static const int appValue200 = 200;
+  static const int appValue800 = 800;
+  static const int appValue0 = 0;
+  static const int appValue2 = 2;
+  static const int appValue3 = 3;
+  static const int appValue5 = 5;
+  static const int appValue7 = 7;
+  static const int appValue8 = 8;
+  static const int appValue9 = 9;
+  static const int appValue1 = 1;
+}

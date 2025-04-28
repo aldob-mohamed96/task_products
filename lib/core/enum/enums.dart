@@ -3,19 +3,12 @@ enum AppAuthenticationLevel {
   unAuthenticated,
   authenticated,
   blocked,
-  visitor
+  visitor,
 }
 
-enum ForgetPasswordLevel {
-  enterPhone,
-  enterCode,
-  enterNewPassword,
-}
+enum ForgetPasswordLevel { enterPhone, enterCode, enterNewPassword }
 
-enum UserType {
-  client,
-  provider,
-}
+enum UserType { client, provider }
 
 //sort by
 enum SortByEnum {
@@ -29,13 +22,7 @@ enum SortByEnum {
   highYear,
 }
 
-enum StateItem {
-  darft,
-  deleted,
-  loadingDelete,
-  saved,
-  loadingSaved,
-}
+enum StateItem { darft, deleted, loadingDelete, saved, loadingSaved }
 
 enum ResetPasswordStateLevel {
   darft,
@@ -191,7 +178,7 @@ enum DataSourcePermission {
   noImageSelected,
   imageSelected,
   locationServiceDisabled,
-  allow
+  allow,
 }
 
 enum DataSourceNetworkError {
@@ -223,10 +210,7 @@ enum DataSourceLaunchUrl {
   unKnownLauncherError,
 }
 
-enum LanguageCode {
-  ar,
-  en,
-}
+enum LanguageCode { ar, en }
 
 enum DataSourceLocalNotification {
   show,
@@ -237,7 +221,7 @@ enum DataSourceLocalNotification {
   onShowError,
   onSelectNotificationError,
   onDidReceiveNotificationError,
-  onGetDetailsNotificationError
+  onGetDetailsNotificationError,
 }
 
 enum LogLevel { debug, info, warning, error, trace, success }
@@ -248,5 +232,5 @@ enum OrderState {
   pending,
   canceled,
   rejected,
-  toDayOrder
+  toDayOrder,
 }

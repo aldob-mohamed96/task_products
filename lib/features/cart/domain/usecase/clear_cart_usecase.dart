@@ -5,15 +5,15 @@ import 'package:task_products/core/service/base_usecase.dart';
 import 'package:task_products/features/cart/domain/entity/cart_item.dart';
 import 'package:task_products/features/cart/domain/repositories/cart_repository.dart';
 
-final class UpdateItemCartUseCase
-    implements BaseUseCase<CartItem, SuccessOperation> {
+final class ClearCartUseCase
+    implements BaseUseCase<Unit, SuccessOperation> {
   final CartRepository _repository;
 
-  UpdateItemCartUseCase({required CartRepository repository})
+  ClearCartUseCase({required CartRepository repository})
     : _repository = repository;
 
   @override
-  Future<Either<Failure, SuccessOperation>> call(CartItem input) async {
-    return await _repository.updateItem(input);
+  Future<Either<Failure, SuccessOperation>> call(Unit input) async {
+    return await _repository.clearCart();
   }
 }

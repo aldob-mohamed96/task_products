@@ -9,17 +9,17 @@ final class ResponseMessage {
 
   ResponseMessage._internal();
 
-  static const String noContent = AppStrings.noContent;
-  static const String badContent = AppStrings.badContent;
-  static const String unAuthorised = AppStrings.unAuthorised;
-  static const String forbidden = AppStrings.forbidden;
-  static const String internalServerError = AppStrings.internalServerError;
-  static const String notFound = AppStrings.notFound;
-  static const String connectTimeOut = AppStrings.connectTimeOut;
-  static const String cancel = AppStrings.cancel;
-  static const String receiveTimeOut = AppStrings.receiveTimeOut;
-  static const String sendTimeOut = AppStrings.sendTimeOut;
-  static const String cashError = AppStrings.cashError;
-  static const String noInternetConnection = AppStrings.noInternetConnection;
-  static const String unknownError = AppStrings.unknownError;
+  static const String noContent = "no content";
+  static const String badContent = "bad content";
+  static const String unAuthorised = "unAuthorised";
+  static const String forbidden = "forbidden";
+  static const String internalServerError = "internal server error";
+  static const String notFound = "not found";
+  static const String connectTimeOut = "connect time out";
+  static const String cancel = "cancel";
+  static const String receiveTimeOut = "receive time out";
+  static const String sendTimeOut = "send time out";
+  static const String cashError = "cash error";
+  static const String noInternetConnection = "no internet connection";
+  static const String unknownError = "unknown error";
 }

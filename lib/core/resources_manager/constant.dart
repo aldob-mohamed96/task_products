@@ -14,9 +14,8 @@ final class AppConstants {
 
   AppConstants._internal();
 
-
-  // base url 
-  static const String baseUrl = 'https://dummyjson.com';
+  // base url
+  static const String baseUrl = '';
   // default value of primitive
   static const String defaultEmptyString = '';
   static const int defaultEmptyInteger = 0;
@@ -51,18 +50,30 @@ final class AppConstants {
   static const String iosVersion = '1.0.0';
   static const bool forceUpdateVersion = true;
   static const String enableVersion = '1';
-  static const String appName = AppStrings.appName;
+  static const String appName = "E-commerce Task App";
 
   static const String assetImagesPath = 'assets/img';
   static const String assetJsonPath = 'assets/json';
 
   static const String assetTranslationPath = 'assets/translations';
 
+  // hive db
+  static const String hiveCartBox = 'cart_box';
+  static const String hiveBoxUser = 'user_box';
+
   // ---------------------auth api extension urls---------------------
   static const List<String> apiWithoutToken = [apiLogin];
 
   // ---------------------auth api extension urls---------------------
-  static const String apiLogin = 'login';
+  static const String apiLogin = 'https://reqres.in/api/login';
   static const String apiHome = '/home';
   static const String apiLogout = '/auth/logout';
+}
+
+class SuccessOperation {
+  final bool isSuccess;
+
+  final String? message;
+
+  SuccessOperation({required this.isSuccess, this.message});
 }

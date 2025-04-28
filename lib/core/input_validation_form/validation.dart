@@ -1,4 +1,3 @@
-
 import 'package:task_products/core/enum/enums.dart';
 
 mixin ValidationImpl {
@@ -17,9 +16,9 @@ mixin ValidationImpl {
     if (password == null || password.isEmpty) {
       return DataSourceValidationInput.empty;
     }
-    final regex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$');
-    if (!regex.hasMatch(password)) {
-      return DataSourceValidationInput.weakPassword;
+
+    if (password.length < 6) {
+      return DataSourceValidationInput.shortPassword;
     }
     if (password.length > 25) {
       return DataSourceValidationInput.veryLong;
