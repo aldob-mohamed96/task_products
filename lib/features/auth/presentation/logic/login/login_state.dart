@@ -13,7 +13,7 @@ class LoginState extends Equatable {
     this.failure = const Failure(),
     this.emailInput = const EmailInput.pure(),
     this.passwordInput = const PasswordInput.pure(),
-    this.showPassword = false,
+    this.showPassword = true,
     this.token = "",
   });
 

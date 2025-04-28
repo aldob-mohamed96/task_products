@@ -38,7 +38,7 @@ class CartRepositoryImpl implements CartRepository {
   @override
   Future<Either<Failure, SuccessOperation>> deleteItem(String id) async {
     try {
-      _localDataSource.deleteItemFromCart(int.parse(id));
+      _localDataSource.deleteItemFromCart(id);
       return Right(SuccessOperation(isSuccess: true));
     } catch (e) {
       return Left(Failure(message: e.toString()));

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
@@ -22,6 +24,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     final result = await _getProductsUseCase(unit);
 
+    log(result.toString());
     result.fold(
       (failure) => emit(
         state.copyWith(flowStateApp: FlowStateApp.error, failure: failure),

@@ -30,7 +30,17 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('My Cart')),
+      appBar: AppBar(
+        title: const Text('My Cart'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              context.read<CartCubit>().clearCart();
+            },
+            icon: const Icon(Icons.delete),
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Expanded(

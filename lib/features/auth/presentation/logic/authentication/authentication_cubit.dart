@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
@@ -27,6 +29,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   Future<void> getAuthentication() async {
     emit(state.copyWith(flowStateApp: FlowStateApp.loading));
     final result = await _getAuthenticationUsecase(unit);
+    log(result.toString(), name: 'getAuthenticationUsecase');
     result.fold(
       (failure) => emit(
         state.copyWith(flowStateApp: FlowStateApp.error, failure: failure),

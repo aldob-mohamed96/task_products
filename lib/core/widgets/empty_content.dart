@@ -46,6 +46,12 @@ class EmptyContent extends StatelessWidget {
               fontWeight: FontWeight.w500,
               color: ColorManager.blackColor,
             ),
+            if (onRefresh != null)
+              "Retry Again".toEelevatedButton(
+                context,
+                onRefresh,
+                colortext: ColorManager.white,
+              ),
           ],
         ),
       ),

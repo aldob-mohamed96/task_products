@@ -37,7 +37,12 @@ class ErrorContent extends StatelessWidget {
             color: ColorManager.blackColor,
           ),
           AppSize.appSize10.heightSizedBox,
-          if (onRefresh != null) "Refresh".toText(context).toButton(onRefresh),
+          if (onRefresh != null)
+            "Retry Again".toEelevatedButton(
+              context,
+              onRefresh,
+              colortext: ColorManager.white,
+            ),
         ],
       ),
     );

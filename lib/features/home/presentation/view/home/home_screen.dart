@@ -93,6 +93,7 @@ class ProductsView extends StatelessWidget {
               : state.flowStateApp == FlowStateApp.error
               ? Center(
                 child: ErrorContent(
+                  message: state.failure.message,
                   onRefresh: () {
                     context.read<HomeCubit>().getProducts();
                   },

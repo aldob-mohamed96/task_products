@@ -16,7 +16,7 @@ abstract interface class AppPreferences {
   // cart
   Future<int> addItemToCart(CartItem item);
   Future<SuccessOperation> updateItemToCart(CartItem item);
-  Future<SuccessOperation> deleteItemFromCart(int id);
+  Future<SuccessOperation> deleteItemFromCart(String id);
   Future<List<CartItem>> getAllItemsFromCart();
   Future<CartItem> getItemFromCart(String id);
   Future<SuccessOperation> clearCart();
@@ -48,7 +48,7 @@ class AppPreferencesImpl implements AppPreferences {
     }
   }
 
-  Future<SuccessOperation> deleteItemFromCart(int id) async {
+  Future<SuccessOperation> deleteItemFromCart(String id) async {
     try {
       await box.delete(id);
       return SuccessOperation(isSuccess: true);
@@ -106,7 +106,11 @@ class AppPreferencesImpl implements AppPreferences {
     try {
       final token = userBox.get('token');
       if (token == null) {
-        return Future.value(AuthenticationData());
+        return Future.value(
+          AuthenticationData(
+            appAuthenticationLevel: AppAuthenticationLevel.unAuthenticated,
+          ),
+        );
       } else {
         return Future.value(
           AuthenticationData(
@@ -142,6 +146,7 @@ class AppPreferencesImpl implements AppPreferences {
   Future<SuccessOperation> logout() async {
     try {
       await userBox.delete('token');
+      await box.clear();
       return SuccessOperation(isSuccess: true);
     } catch (e) {
       return SuccessOperation(isSuccess: false, message: e.toString());

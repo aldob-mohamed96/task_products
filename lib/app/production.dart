@@ -65,10 +65,6 @@ class _AppMaterailProductionState extends State<AppMaterailProduction>
         return MultiBlocListener(
           listeners: [
             BlocListener<AuthenticationCubit, AuthenticationState>(
-              listenWhen:
-                  (previous, current) =>
-                      previous.appAuthenticationLevel !=
-                      current.appAuthenticationLevel,
               listener: (context, state) {
                 if (state.appAuthenticationLevel ==
                     AppAuthenticationLevel.authenticated) {

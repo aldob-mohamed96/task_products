@@ -11,7 +11,7 @@ import 'package:task_products/features/cart/data/response/cart_response.dart';
 abstract interface class CartLocalDataSource {
   Future<int> addItemToCart(CartItem item);
   Future<void> updateItemToCart(CartItem item);
-  Future<void> deleteItemFromCart(int id);
+  Future<void> deleteItemFromCart(String id);
   Future<List<CartItem>> getAllItemsFromCart();
   Future<CartItem> getItemFromCart(String id);
   Future<void> clearCart();
@@ -35,7 +35,7 @@ class CartLocalDataSourceImpl implements CartLocalDataSource {
   }
 
   @override
-  Future<void> deleteItemFromCart(int id) async {
+  Future<void> deleteItemFromCart(String id) async {
     await _appPreferences.deleteItemFromCart(id);
   }
 

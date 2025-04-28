@@ -68,6 +68,7 @@ class CartCubit extends Cubit<CartState> {
     emit(state.copyWith(flowStateApp: FlowStateApp.loadingDelete));
 
     final result = await _deleteItemFromCartUseCase(id);
+    log(result.toString());
     result.fold(
       (failure) => emit(
         state.copyWith(flowStateApp: FlowStateApp.notDeleted, failure: failure),
@@ -92,6 +93,7 @@ class CartCubit extends Cubit<CartState> {
   }
 
   Future<void> getAllItemsFromCart() async {
+    log("getAllItemsFromCart");
     emit(state.copyWith(flowStateApp: FlowStateApp.loading));
     final result = await _getAllItemsFromCartUseCase(unit);
     result.fold(
