@@ -1,117 +1,252 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_products/core/enum/enums.dart';
 import 'package:task_products/core/extension/context.dart';
+import 'package:task_products/core/extension/data_type.dart';
+import 'package:task_products/core/extension/widget.dart';
 import 'package:task_products/core/resources_manager/color.dart';
+import 'package:task_products/core/widgets/empty_content.dart';
+import 'package:task_products/core/widgets/error_content.dart';
 import 'package:task_products/core/widgets/font.dart';
+import 'package:task_products/core/widgets/image_network.dart';
+import 'package:task_products/core/widgets/loading.dart';
+import 'package:task_products/features/cart/presentation/logic/cart/cart_cubit.dart';
 
-//ignore: must_be_immutable
-class ExploreViewApartmentView extends StatelessWidget {
-  ExploreViewApartmentView({super.key});
+class CartScreen extends StatefulWidget {
+  const CartScreen({Key? key}) : super(key: key);
+
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<CartCubit>().getAllItemsFromCart();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: context.width,
-      height: context.height,
-      child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 16,
-          crossAxisSpacing: 16,
-          childAspectRatio: 0.7,
-          mainAxisExtent: 250,
-        ),
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return ExploreApartmentCardView();
-        },
+    return Scaffold(
+      appBar: AppBar(title: const Text('My Cart')),
+      body: Column(
+        children: [
+          Expanded(
+            child: BlocBuilder<CartCubit, CartState>(
+              builder: (context, state) {
+                return state.flowStateApp == FlowStateApp.loading
+                    ? const Center(child: LoadinContent())
+                    : state.flowStateApp == FlowStateApp.error
+                    ? Center(
+                      child: ErrorContent(
+                        onRefresh: () {
+                          context.read<CartCubit>().getAllItemsFromCart();
+                        },
+                      ),
+                    )
+                    : state.cartItems.items.isEmpty &&
+                        state.flowStateApp == FlowStateApp.normal
+                    ? Center(child: const EmptyContent())
+                    : ListView.separated(
+                      separatorBuilder:
+                          (context, index) => const SizedBox(height: 10),
+
+                      itemCount: state.cartItems.items.length,
+                      itemBuilder: (context, index) {
+                        final item = state.cartItems.items[index];
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: SizedBox(
+                            height: 100,
+                            width: context.width,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(6.0),
+                                    child: NetWorkImageCashed(
+                                      url: item.image,
+                                      height: 100,
+
+                                      raduis: 10,
+                                      width: 100,
+                                      boxFit: BoxFit.cover,
+                                    ),
+                                  ),
+
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          item.title,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+
+                                        Text(
+                                          'Price: ${item.price.toStringAsFixed(2)} SAR',
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      IconButton(
+                                        onPressed:
+                                            () => context
+                                                .read<CartCubit>()
+                                                .deleteItemFromCart(item.id),
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                            onPressed: () {
+                                              if (item.quantity > 1) {
+                                                context
+                                                    .read<CartCubit>()
+                                                    .updateItemCart(
+                                                      item.copyWith(
+                                                        quantity:
+                                                            item.quantity - 1,
+                                                      ),
+                                                    );
+                                              }
+                                            },
+                                            icon: const Icon(Icons.remove),
+                                          ),
+                                          Text(
+                                            item.quantity.toString(),
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              context
+                                                  .read<CartCubit>()
+                                                  .updateItemCart(
+                                                    item.copyWith(
+                                                      quantity:
+                                                          item.quantity + 1,
+                                                    ),
+                                                  );
+                                            },
+                                            icon: const Icon(Icons.add),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+              },
+            ),
+          ),
+
+          Container(
+            height: 150,
+            width: context.width,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: ColorManager.primaryColor,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                BlocBuilder<CartCubit, CartState>(
+                  builder: (context, state) {
+                    return Text(
+                      'Total: ${state.totalPrice.toStringAsFixed(2)} SAR',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.right,
+                    );
+                  },
+                ),
+                const SizedBox(height: 12),
+                "Checkout".toEelevatedButton(
+                  context,
+                  () {},
+                  colortext: ColorManager.primaryColor,
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  height: 50,
+                  width: 150,
+                ),
+
+                SizedBox(height: 30),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-//ignore: must_be_immutable
-class ExploreApartmentCardView extends StatelessWidget {
-  ExploreApartmentCardView({super.key});
+class CartItem {
+  String title;
+  double price;
+  int quantity;
+  String imageUrl;
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          width: context.width,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Image with badge and favorite icon
-                Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c',
-                        height: 190,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-
-                    Positioned(
-                      top: 10,
-                      right: 10,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        child: Icon(Icons.favorite_border, color: Colors.red),
-                      ),
-                    ),
-                  ],
-                ),
-
-                // Title and Price
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Berliner alle",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      RichText(
-                        text: TextSpan(
-                          text: "€ 450.00 ",
-                          children: [
-                            TextSpan(
-                              text: "/Month",
-                              style: TextStyle(
-                                fontSize: FontSize.fontSize14,
-                                fontWeight: FontWeight.w400,
-                                color: ColorManager.primaryColor,
-                              ),
-                            ),
-                          ],
-                          style: TextStyle(
-                            fontSize: FontSize.fontSize16,
-                            fontWeight: FontWeight.w500,
-                            color: ColorManager.primaryColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  CartItem({
+    required this.title,
+    required this.price,
+    required this.quantity,
+    required this.imageUrl,
+  });
 }

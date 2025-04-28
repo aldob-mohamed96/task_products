@@ -14,11 +14,11 @@ abstract interface class AppPreferences {
   Future<SuccessOperation> logout();
 
   // cart
-  Future<SuccessOperation> addItemToCart(CartItem item);
+  Future<int> addItemToCart(CartItem item);
   Future<SuccessOperation> updateItemToCart(CartItem item);
   Future<SuccessOperation> deleteItemFromCart(int id);
   Future<List<CartItem>> getAllItemsFromCart();
-  Future<CartItem> getItemFromCart(int id);
+  Future<CartItem> getItemFromCart(String id);
   Future<SuccessOperation> clearCart();
   Future<bool> isCartEmpty();
   Future<int> getCartItemsCount();
@@ -29,12 +29,13 @@ class AppPreferencesImpl implements AppPreferences {
 
   final userBox = Hive.box(AppConstants.hiveBoxUser);
 
-  Future<SuccessOperation> addItemToCart(CartItem item) async {
+  Future<int> addItemToCart(CartItem item) async {
     try {
       await box.put(item.id, item);
-      return SuccessOperation(isSuccess: true);
+
+      return box.length;
     } catch (e) {
-      return SuccessOperation(isSuccess: false, message: e.toString());
+      return -1;
     }
   }
 
@@ -57,44 +58,30 @@ class AppPreferencesImpl implements AppPreferences {
   }
 
   Future<List<CartItem>> getAllItemsFromCart() async {
-    List<CartItem> items = [];
-    final values = box.values;
-    if (values.isNotEmpty)
-      items.addAll((box.values as List<CartItem>).toList());
-
-    return [...itemss];
+    return box.values
+        .toList()
+        .map(
+          (e) => CartItem(
+            id: e.id,
+            title: e.title,
+            price: e.price,
+            quantity: e.quantity,
+            image: e.image,
+          ),
+        )
+        .toList();
   }
 
-  List<CartItem> itemss = [
-    CartItem(id: "1", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "2", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "3", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "4", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "5", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-    CartItem(id: "6", price: 434.3, title: "Title ", quantity: 22, image: ""),
-  ];
+  Future<CartItem> getItemFromCart(String id) async {
+    final values = box.values.toList();
 
-  Future<CartItem> getItemFromCart(int id) async {
-    return box.get(id);
+    for (var item in values) {
+      if (item.id.toString() == id.toString()) {
+        return item;
+      }
+    }
+
+    return CartItem.empty();
   }
 
   Future<SuccessOperation> clearCart() async {

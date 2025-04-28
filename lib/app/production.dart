@@ -9,6 +9,7 @@ import 'package:task_products/core/routes/routes.dart';
 import 'package:task_products/features/auth/presentation/logic/authentication/authentication_cubit.dart';
 import 'package:task_products/features/cart/data/response/cart_response.dart';
 import 'package:task_products/features/cart/presentation/logic/cart/cart_cubit.dart';
+import 'package:task_products/features/home/presentation/logic/home/home_cubit.dart';
 
 import '../core/enum/enums.dart';
 
@@ -26,7 +27,8 @@ class AppProductionStartPoint extends StatelessWidget {
         BlocProvider(
           create: (_) => instance<AuthenticationCubit>()..getAuthentication(),
         ),
-        BlocProvider(create: (_) => instance<CartCubit>()..getCartCount()),
+        BlocProvider(create: (_) => instance<CartCubit>()),
+        BlocProvider(create: (_) => instance<HomeCubit>()),
       ],
       child: AppMaterailProduction(appRouter: appRouter),
     );
@@ -74,9 +76,15 @@ class _AppMaterailProductionState extends State<AppMaterailProduction>
                     Routes.home,
                     (route) => false,
                   );
-                } else {
+                } else if (state.appAuthenticationLevel ==
+                    AppAuthenticationLevel.unAuthenticated) {
                   navigator.pushNamedAndRemoveUntil(
                     Routes.login,
+                    (route) => false,
+                  );
+                } else {
+                  navigator.pushNamedAndRemoveUntil(
+                    Routes.splash,
                     (route) => false,
                   );
                 }
@@ -89,7 +97,7 @@ class _AppMaterailProductionState extends State<AppMaterailProduction>
       navigatorKey: navigatorKey,
       title: "Task Products App",
       debugShowCheckedModeBanner: false,
-      initialRoute: Routes.login,
+      initialRoute: Routes.splash,
       onGenerateRoute: widget.appRouter.generateRoute,
       themeMode: ThemeMode.light,
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_products/core/extension/data_type.dart';
+import 'package:task_products/core/extension/widget.dart';
 import 'package:task_products/core/resources_manager/assets.dart';
 import 'package:task_products/core/resources_manager/strings.dart';
 import 'package:task_products/core/resources_manager/values.dart';
@@ -36,6 +37,7 @@ class ErrorContent extends StatelessWidget {
             color: ColorManager.blackColor,
           ),
           AppSize.appSize10.heightSizedBox,
+          if (onRefresh != null) "Refresh".toText(context).toButton(onRefresh),
         ],
       ),
     );

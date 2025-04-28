@@ -31,6 +31,11 @@ import 'package:task_products/features/cart/domain/usecase/get_cart_count_usecas
 import 'package:task_products/features/cart/domain/usecase/get_item_cart_usecase.dart';
 import 'package:task_products/features/cart/domain/usecase/update_item_cart_usecase.dart';
 import 'package:task_products/features/cart/presentation/logic/cart/cart_cubit.dart';
+import 'package:task_products/features/home/data/data_source/remote_data_source/remote_data_source.dart';
+import 'package:task_products/features/home/data/repository_impl/repository_impl.dart';
+import 'package:task_products/features/home/domain/repository/repository.dart';
+import 'package:task_products/features/home/domain/usecase/get_product_usecase.dart';
+import 'package:task_products/features/home/presentation/logic/home/home_cubit.dart';
 
 final instance = GetIt.instance;
 Future<void> initAppServicesGetIt() async {
@@ -186,6 +191,35 @@ void cartFactory() async {
         getCartCountsUseCase: instance(),
         updateItemCartUseCase: instance(),
       ),
+    );
+  }
+}
+
+void homeFactory() {
+  if (!instance.isRegistered<HomeRemoteDataSource>()) {
+    instance.registerFactory<HomeRemoteDataSource>(
+      () => HomeRemoteDataSourceImpl(clientApi: instance()),
+    );
+  }
+
+  if (!instance.isRegistered<HomeRepository>()) {
+    instance.registerFactory<HomeRepository>(
+      () => HomeRepositoryImpl(
+        networkInfo: instance(),
+        remoteDataSource: instance(),
+      ),
+    );
+  }
+
+  if (!instance.isRegistered<GetProductsUseCase>()) {
+    instance.registerFactory<GetProductsUseCase>(
+      () => GetProductsUseCase(repository: instance()),
+    );
+  }
+
+  if (!instance.isRegistered<HomeCubit>()) {
+    instance.registerFactory<HomeCubit>(
+      () => HomeCubit(getProductsUseCase: instance()),
     );
   }
 }

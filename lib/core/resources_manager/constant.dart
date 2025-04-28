@@ -66,7 +66,7 @@ final class AppConstants {
 
   // ---------------------auth api extension urls---------------------
   static const String apiLogin = 'https://reqres.in/api/login';
-  static const String apiHome = '/home';
+  static const String apiHome = 'https://fakestoreapi.com/products';
   static const String apiLogout = '/auth/logout';
 }
 

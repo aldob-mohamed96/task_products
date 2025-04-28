@@ -15,10 +15,11 @@ class CartRepositoryImpl implements CartRepository {
     : _localDataSource = localDataSource;
 
   @override
-  Future<Either<Failure, SuccessOperation>> addItem(CartItem item) async {
+  Future<Either<Failure, int>> addItem(CartItem item) async {
     try {
-      _localDataSource.addItemToCart(item);
-      return Right(SuccessOperation(isSuccess: true));
+      ;
+
+      return Right(await _localDataSource.addItemToCart(item));
     } catch (e) {
       return Left(Failure(message: e.toString()));
     }
@@ -68,7 +69,7 @@ class CartRepositoryImpl implements CartRepository {
   @override
   Future<Either<Failure, CartItem>> getItemById(String id) async {
     try {
-      final cartItem = await _localDataSource.getItemFromCart(int.parse(id));
+      final cartItem = await _localDataSource.getItemFromCart(id);
       return Right(cartItem);
     } catch (e) {
       return Left(Failure(message: e.toString()));

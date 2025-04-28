@@ -5,7 +5,7 @@ import 'package:task_products/features/cart/data/response/cart_response.dart';
 import 'package:task_products/features/cart/domain/entity/cart_item.dart';
 
 abstract class CartRepository {
-  Future<Either<Failure, SuccessOperation>> addItem(CartItem item);
+  Future<Either<Failure, int>> addItem(CartItem item);
   Future<Either<Failure, SuccessOperation>> updateItem(CartItem item);
   Future<Either<Failure, SuccessOperation>> deleteItem(String id);
   Future<Either<Failure, CartItem>> getItemById(String id);

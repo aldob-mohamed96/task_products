@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
@@ -53,12 +55,10 @@ class CartCubit extends Cubit<CartState> {
           failure: failure,
         ),
       ),
-      (success) => emit(
+      (count) => emit(
         state.copyWith(
           flowStateApp: FlowStateApp.successInserting,
-          cartItems: state.cartItems.copyWith(
-            items: [...state.cartItems.items, item],
-          ),
+          countCart: count,
         ),
       ),
     );
@@ -72,17 +72,9 @@ class CartCubit extends Cubit<CartState> {
       (failure) => emit(
         state.copyWith(flowStateApp: FlowStateApp.notDeleted, failure: failure),
       ),
-      (success) => emit(
-        state.copyWith(
-          flowStateApp: FlowStateApp.successDeleting,
-          cartItems: state.cartItems.copyWith(
-            items:
-                state.cartItems.items
-                    .where((element) => element.id != id)
-                    .toList(),
-          ),
-        ),
-      ),
+      (success) {
+        getAllItemsFromCart();
+      },
     );
   }
 
@@ -93,12 +85,9 @@ class CartCubit extends Cubit<CartState> {
       (failure) => emit(
         state.copyWith(flowStateApp: FlowStateApp.notDeleted, failure: failure),
       ),
-      (success) => emit(
-        state.copyWith(
-          flowStateApp: FlowStateApp.successDeleting,
-          cartItems: state.cartItems.copyWith(items: []),
-        ),
-      ),
+      (success) {
+        getAllItemsFromCart();
+      },
     );
   }
 
@@ -110,7 +99,11 @@ class CartCubit extends Cubit<CartState> {
         state.copyWith(flowStateApp: FlowStateApp.error, failure: failure),
       ),
       (data) => emit(
-        state.copyWith(flowStateApp: FlowStateApp.success, cartItems: data),
+        state.copyWith(
+          flowStateApp: FlowStateApp.normal,
+          cartItems: data,
+          countCart: data.items.length,
+        ),
       ),
     );
   }
@@ -128,20 +121,8 @@ class CartCubit extends Cubit<CartState> {
     );
   }
 
-  Future<void> getItemFromCart(String id) async {
-    emit(state.copyWith(flowStateApp: FlowStateApp.loading));
-    final result = await _getItemFromCartUseCase(id);
-    result.fold(
-      (failure) => emit(
-        state.copyWith(flowStateApp: FlowStateApp.error, failure: failure),
-      ),
-      (data) => emit(
-        state.copyWith(
-          flowStateApp: FlowStateApp.success,
-          cartItems: state.cartItems.copyWith(items: [data]),
-        ),
-      ),
-    );
+  Future<Either<Failure, CartItem>> getItemFromCart(String id) async {
+    return await _getItemFromCartUseCase(id);
   }
 
   Future<void> updateItemCart(CartItem item) async {
@@ -152,30 +133,7 @@ class CartCubit extends Cubit<CartState> {
         state.copyWith(flowStateApp: FlowStateApp.notUpdated, failure: failure),
       ),
       (success) {
-        if (state.cartItems.items.any((element) => element.id == item.id)) {
-          emit(
-            state.copyWith(
-              flowStateApp: FlowStateApp.successUpdate,
-              cartItems: state.cartItems.copyWith(
-                items: [
-                  ...state.cartItems.items
-                      .where((element) => element.id != item.id)
-                      .toList(),
-                  item,
-                ],
-              ),
-            ),
-          );
-        } else {
-          emit(
-            state.copyWith(
-              flowStateApp: FlowStateApp.successUpdate,
-              cartItems: state.cartItems.copyWith(
-                items: [...state.cartItems.items, item],
-              ),
-            ),
-          );
-        }
+        getAllItemsFromCart();
       },
     );
   }

@@ -9,11 +9,11 @@ import 'package:task_products/core/service/app_preferance.dart';
 import 'package:task_products/features/cart/data/response/cart_response.dart';
 
 abstract interface class CartLocalDataSource {
-  Future<void> addItemToCart(CartItem item);
+  Future<int> addItemToCart(CartItem item);
   Future<void> updateItemToCart(CartItem item);
   Future<void> deleteItemFromCart(int id);
   Future<List<CartItem>> getAllItemsFromCart();
-  Future<CartItem> getItemFromCart(int id);
+  Future<CartItem> getItemFromCart(String id);
   Future<void> clearCart();
   Future<int> getCartCount();
 }
@@ -25,8 +25,8 @@ class CartLocalDataSourceImpl implements CartLocalDataSource {
     : _appPreferences = appPreferences;
 
   @override
-  Future<void> addItemToCart(CartItem item) async {
-    await _appPreferences.addItemToCart(item);
+  Future<int> addItemToCart(CartItem item) async {
+    return await _appPreferences.addItemToCart(item);
   }
 
   @override
@@ -45,7 +45,7 @@ class CartLocalDataSourceImpl implements CartLocalDataSource {
   }
 
   @override
-  Future<CartItem> getItemFromCart(int id) async {
+  Future<CartItem> getItemFromCart(String id) async {
     return await _appPreferences.getItemFromCart(id);
   }
 

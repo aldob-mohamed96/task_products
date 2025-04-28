@@ -26,6 +26,9 @@ class CartItem extends HiveObject {
     required this.image,
   });
 
+  CartItem.empty()
+    : this(id: '', title: '', price: 0.0, quantity: 0, image: '');
+
   // copyWith
   CartItem copyWith({
     String? id,
